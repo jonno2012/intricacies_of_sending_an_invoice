@@ -63,11 +63,10 @@ class User extends Authenticatable
         );
     }
 
-    public function sendInvoice($invoiceId)
+    public function sendInvoice(Invoice $invoice = null)
     {
-        SendInvoice::dispatch(
-            $this->subscription()->invoice($invoiceId),
-            $this
-        );
+        $invoice ??= $this->subscriptions()->latestInvoice();
+
+        $invoice->send($this);
     }
 }

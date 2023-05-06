@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -14,7 +15,7 @@ class InvoicePaid extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected string $invoicePath)
+    public function __construct(protected Invoice $invoice)
     {
         //
     }
@@ -37,7 +38,7 @@ class InvoicePaid extends Notification
         return (new MailMessage)
                     ->line('You have a new paid invoice from Laracasts.')
                     ->line('Thank you for using our application')
-                    ->attach($this->invoicePath);
+                    ->attach($this->invoice->downloadPath());
     }
 
     /**

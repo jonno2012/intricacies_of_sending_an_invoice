@@ -21,7 +21,10 @@ class SendInvoice implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected Invoice $invoice, protected User $user)
+    public function __construct(
+        protected Invoice $invoice,
+        protected User $user
+    )
     {
         //
     }
@@ -31,17 +34,17 @@ class SendInvoice implements ShouldQueue
      */
     public function handle(): void
     {
-        $html = $this->html();
+        $this->saveInvoiceAsPdf();
 
+        $this->user->notify(new InvoicePaid($this->invoice));
+    }
 
-        $invoicePath = storage_path("app/{$this->invoice->id()}.pdf");
-
-        Browsershot::html($html)
+    protected function saveInvoiceAsPdf(): void
+    {
+        Browsershot::html($this->html())
             ->showBackground()
             ->margins(10, 10, 10, 10)
-            ->save($invoicePath);
-
-        $this->user->notify(new InvoicePaid($invoicePath));
+            ->save($this->invoice->downloadPath());
     }
 
     /**
