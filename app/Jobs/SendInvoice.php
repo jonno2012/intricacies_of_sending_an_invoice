@@ -41,6 +41,16 @@ class SendInvoice implements ShouldQueue
 
     protected function saveInvoiceAsPdf(): void
     {
+
+        // $base64Pdf = Browsershot::html($view)->base64pdf();
+
+        // app/Notifications/InvoicePaid.php
+
+//        return (new MailMessage()) // a better to do it if you don't need to save all of the generated files.
+//            ->line("You have a new paid invoice from Laracasts.")
+//            ->line("Thank you for using our application!")
+//            ->attachData(base64_decode($this->$base64Pdf), 'invoice.pdf');
+
         Browsershot::html($this->html())
             ->showBackground()
             ->margins(10, 10, 10, 10)
